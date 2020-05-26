@@ -38,12 +38,24 @@ namespace persisted_controls_sample.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string RichTextValue {
+        public string RichTextBoxValue {
             get {
-                return ((string)(this["RichTextValue"]));
+                return ((string)(this["RichTextBoxValue"]));
             }
             set {
-                this["RichTextValue"] = value;
+                this["RichTextBoxValue"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int TabControlIndex {
+            get {
+                return ((int)(this["TabControlIndex"]));
+            }
+            set {
+                this["TabControlIndex"] = value;
             }
         }
     }

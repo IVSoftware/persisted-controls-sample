@@ -26,36 +26,48 @@ namespace persisted_controls_sample.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string TextBoxValue {
+        public string persistTextBox1 {
             get {
-                return ((string)(this["TextBoxValue"]));
+                return ((string)(this["persistTextBox1"]));
             }
             set {
-                this["TextBoxValue"] = value;
+                this["persistTextBox1"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string RichTextBoxValue {
+        public string persistRichTextBox1 {
             get {
-                return ((string)(this["RichTextBoxValue"]));
+                return ((string)(this["persistRichTextBox1"]));
             }
             set {
-                this["RichTextBoxValue"] = value;
+                this["persistRichTextBox1"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int TabControlIndex {
+        public string persistRichTextBox2 {
             get {
-                return ((int)(this["TabControlIndex"]));
+                return ((string)(this["persistRichTextBox2"]));
             }
             set {
-                this["TabControlIndex"] = value;
+                this["persistRichTextBox2"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int persistTabControl1 {
+            get {
+                return ((int)(this["persistTabControl1"]));
+            }
+            set {
+                this["persistTabControl1"] = value;
             }
         }
     }

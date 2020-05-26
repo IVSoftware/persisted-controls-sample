@@ -20,12 +20,17 @@ namespace persisted_controls_sample
         protected override void OnHandleCreated(EventArgs e)
         {
             base.OnHandleCreated(e);
-            foreach(var control in Controls)
+            IterateControls(this);
+        }
+        void IterateControls(Control control)
+        {
+            if (control is IPersistCommon)
             {
-                if(control is IPersistCommon)
-                {
-                    ((IPersistCommon)control).Load();
-                }
+                ((IPersistCommon)control).Load();
+            }
+            foreach (Control child in control.Controls)
+            {
+                IterateControls(child);
             }
         }
     }
@@ -47,7 +52,7 @@ namespace persisted_controls_sample
             switch (SaveType)
             {
                 case SaveType.AppProperties:
-                    Properties.Settings.Default["TextBoxValue"] = Text;
+                    Properties.Settings.Default[Name] = Text;
                     Properties.Settings.Default.Save();
                     break;
                 case SaveType.WindowsRegisty:
@@ -65,7 +70,7 @@ namespace persisted_controls_sample
                 switch (SaveType)
                 {
                     case SaveType.AppProperties:
-                        Text = (string)Properties.Settings.Default["TextBoxValue"];
+                        Text = (string)Properties.Settings.Default[Name];
                         break;
                     case SaveType.WindowsRegisty:
                     case SaveType.FileDataStore:
@@ -110,7 +115,7 @@ namespace persisted_controls_sample
             switch (SaveType)
             {
                 case SaveType.AppProperties:
-                    Properties.Settings.Default.RichTextBoxValue = Rtf;
+                    Properties.Settings.Default[Name] = Rtf;
                     Properties.Settings.Default.Save();
                     break;
                 case SaveType.WindowsRegisty:
@@ -126,7 +131,7 @@ namespace persisted_controls_sample
                 switch (SaveType)
                 {
                     case SaveType.AppProperties:
-                        Rtf = Properties.Settings.Default.RichTextBoxValue;
+                        Rtf = (string)Properties.Settings.Default[Name];
                         break;
                     case SaveType.WindowsRegisty:
                     case SaveType.FileDataStore:
@@ -168,7 +173,7 @@ namespace persisted_controls_sample
             switch (SaveType)
             {
                 case SaveType.AppProperties:
-                    Properties.Settings.Default.TabControlIndex = SelectedIndex;
+                    Properties.Settings.Default[Name] = SelectedIndex;
                     Properties.Settings.Default.Save();
                     break;
                 case SaveType.WindowsRegisty:
@@ -186,9 +191,10 @@ namespace persisted_controls_sample
                     case SaveType.AppProperties:
                         BeginInvoke((MethodInvoker)delegate
                         {
-                            if (Properties.Settings.Default.TabControlIndex < TabCount)
+                            int tabIndex = (int)Properties.Settings.Default[Name];
+                            if (tabIndex < TabCount)
                             {
-                                SelectedIndex = Properties.Settings.Default.TabControlIndex;
+                                SelectedIndex = tabIndex;
                             }
                         });
                         break;

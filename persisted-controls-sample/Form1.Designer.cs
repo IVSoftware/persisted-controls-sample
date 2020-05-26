@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.textBox1 = new persisted_controls_sample.PersistTextBox();
+            this.persistTextBox1 = new persisted_controls_sample.PersistTextBox();
             this.persistTabControl1 = new persisted_controls_sample.PersistTabControl();
             this.tabPageRTF1 = new System.Windows.Forms.TabPage();
             this.tabPageRTF2 = new System.Windows.Forms.TabPage();
@@ -41,11 +41,11 @@
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(30, 23);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.SaveType = persisted_controls_sample.SaveType.AppProperties;
-            this.textBox1.Size = new System.Drawing.Size(100, 20);
-            this.textBox1.TabIndex = 0;
+            this.persistTextBox1.Location = new System.Drawing.Point(30, 23);
+            this.persistTextBox1.Name = "persistTextBox1";
+            this.persistTextBox1.SaveType = persisted_controls_sample.SaveType.AppProperties;
+            this.persistTextBox1.Size = new System.Drawing.Size(100, 20);
+            this.persistTextBox1.TabIndex = 0;
             // 
             // persistTabControl1
             // 
@@ -106,7 +106,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(279, 198);
             this.Controls.Add(this.persistTabControl1);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.persistTextBox1);
             this.Name = "Form1";
             this.Text = "Form1";
             this.persistTabControl1.ResumeLayout(false);
@@ -119,7 +119,7 @@
 
         #endregion
 
-        private PersistTextBox textBox1;
+        private PersistTextBox persistTextBox1;
         private PersistTabControl persistTabControl1;
         private System.Windows.Forms.TabPage tabPageRTF1;
         private PersistRichTextBox persistRichTextBox1;

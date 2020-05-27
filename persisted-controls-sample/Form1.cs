@@ -38,10 +38,6 @@ namespace persisted_controls_sample
             {
                 ((IPersistCommon)control).Load();
             }
-            if (control is IMessageFilter)
-            {
-                Application.AddMessageFilter((IMessageFilter)control);
-            }
             foreach (Control child in control.Controls)
             {
                 IterateControls(child);
@@ -117,14 +113,14 @@ namespace persisted_controls_sample
     }
 
     class PersistRichTextBox
-        : RichTextBox       // Inherit the standard version
-        , IPersistCommon    // But MUST implement 'SaveType' and 'Save()'
-        , IMessageFilter    // Intercept WM_PASTE message
+        : RichTextBox           // Inherit the standard version
+        , IPersistCommon        // But MUST implement 'SaveType' and 'Save()'
+        , ISupportInitialize    //
     {
         public PersistRichTextBox()
         {
             WDT = new Timer();
-            WDT.Interval = 5000;
+            WDT.Interval = 1000;
             WDT.Tick += WDT_Tick;
         }
         string FileName=> FileDataStoreFolder + Name + ".rtf";
@@ -148,11 +144,13 @@ namespace persisted_controls_sample
                 default:
                     throw new NotImplementedException("To do!");
             }
+            Debug.WriteLine("Saved");
         }
         public void Load()
         {
             if (!DesignMode)
             {
+                BeginInit();
                 switch (SaveType)
                 {
                     case SaveType.AppProperties:
@@ -173,41 +171,39 @@ namespace persisted_controls_sample
                     default:
                         throw new NotImplementedException("To do!");
                 }
+                EndInit();
             }
         }
-
-        protected override void OnLeave(EventArgs e)
+        protected override void OnTextChanged(EventArgs e)
         {
-            base.OnLeave(e);
-            Save(); // If user leaves the control
-        }
-        protected override void OnKeyDown(KeyEventArgs e)
-        {
-            base.OnKeyDown(e);
-            WDT.Start();
+            // This will pick up Paste operations, too.
+            base.OnTextChanged(e);
+            if(!_initializing)
+            {
+                // Restarts a short inactivity WDT and autosaves when done.
+                WDT.Stop();
+                WDT.Start(); 
+            }
         }
         Timer WDT;
 
+        // Timeout has expired since the last change to the document.
         private void WDT_Tick(object sender, EventArgs e)
         {
-            // AutoSave after one minute
             WDT.Stop();
             Save();
-            Debug.WriteLine("Tick");
         }
 
-        public bool PreFilterMessage(ref Message m)
+        public void BeginInit()
         {
-            switch (m.Msg)
-            {
-                case WM_PASTE:
-                    WDT.Start();
-                    break;
-            }
-            return false; // Do not suppress downstream message
+            _initializing = true;
         }
 
-        const int WM_PASTE = 0x0302;
+        public void EndInit()
+        {
+            _initializing = false;
+        }
+        bool _initializing = false;
     }
 
     class PersistTabControl

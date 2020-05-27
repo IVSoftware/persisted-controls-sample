@@ -44,11 +44,11 @@
             this.persistTabControl1.Alignment = System.Windows.Forms.TabAlignment.Bottom;
             this.persistTabControl1.Controls.Add(this.tabPageRTF1);
             this.persistTabControl1.Controls.Add(this.tabPageRTF2);
-            this.persistTabControl1.Location = new System.Drawing.Point(30, 73);
+            this.persistTabControl1.Location = new System.Drawing.Point(30, 57);
             this.persistTabControl1.Name = "persistTabControl1";
             this.persistTabControl1.SaveType = persisted_controls_sample.SaveType.AppProperties;
             this.persistTabControl1.SelectedIndex = 0;
-            this.persistTabControl1.Size = new System.Drawing.Size(200, 100);
+            this.persistTabControl1.Size = new System.Drawing.Size(200, 129);
             this.persistTabControl1.TabIndex = 2;
             // 
             // tabPageRTF1
@@ -57,7 +57,7 @@
             this.tabPageRTF1.Location = new System.Drawing.Point(4, 4);
             this.tabPageRTF1.Name = "tabPageRTF1";
             this.tabPageRTF1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageRTF1.Size = new System.Drawing.Size(192, 74);
+            this.tabPageRTF1.Size = new System.Drawing.Size(192, 103);
             this.tabPageRTF1.TabIndex = 0;
             this.tabPageRTF1.Text = "RTF1";
             this.tabPageRTF1.UseVisualStyleBackColor = true;
@@ -68,7 +68,7 @@
             this.persistRichTextBox1.Location = new System.Drawing.Point(3, 3);
             this.persistRichTextBox1.Name = "persistRichTextBox1";
             this.persistRichTextBox1.SaveType = persisted_controls_sample.SaveType.File;
-            this.persistRichTextBox1.Size = new System.Drawing.Size(186, 68);
+            this.persistRichTextBox1.Size = new System.Drawing.Size(186, 97);
             this.persistRichTextBox1.TabIndex = 3;
             this.persistRichTextBox1.Text = "";
             // 
@@ -95,7 +95,7 @@
             // 
             // persistTextBox1
             // 
-            this.persistTextBox1.Location = new System.Drawing.Point(30, 37);
+            this.persistTextBox1.Location = new System.Drawing.Point(30, 21);
             this.persistTextBox1.Name = "persistTextBox1";
             this.persistTextBox1.SaveType = persisted_controls_sample.SaveType.AppProperties;
             this.persistTextBox1.Size = new System.Drawing.Size(196, 20);

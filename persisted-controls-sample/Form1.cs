@@ -18,10 +18,12 @@ namespace persisted_controls_sample
                     Assembly
                     .GetExecutingAssembly()
                     .FullName.Split(',')[0];
-            var _fileDataStoreFolder =
+            FileDataStoreFolder =
                 Environment.GetFolderPath(
                     Environment.SpecialFolder.LocalApplicationData) + @"\" +
                     assemblyName + @"\";
+            Directory
+                .CreateDirectory(FileDataStoreFolder);
         }
         // App-specific folder path to store data.
         public static string FileDataStoreFolder { get; private set; } 
@@ -35,6 +37,10 @@ namespace persisted_controls_sample
             if (control is IPersistCommon)
             {
                 ((IPersistCommon)control).Load();
+            }
+            if (control is IMessageFilter)
+            {
+                Application.AddMessageFilter((IMessageFilter)control);
             }
             foreach (Control child in control.Controls)
             {
@@ -113,6 +119,7 @@ namespace persisted_controls_sample
     class PersistRichTextBox
         : RichTextBox       // Inherit the standard version
         , IPersistCommon    // But MUST implement 'SaveType' and 'Save()'
+        , IMessageFilter    // Intercept WM_PASTE message
     {
         public PersistRichTextBox()
         {
@@ -154,7 +161,10 @@ namespace persisted_controls_sample
                         Rtf = (string)Properties.Settings.Default[Name];
                         break;
                     case SaveType.File:
-                        Rtf = File.ReadAllText(FileName);
+                        if(File.Exists(FileName))
+                        {
+                            Rtf = File.ReadAllText(FileName);
+                        }
                         break;
                     case SaveType.FileDataStore:
                     case SaveType.FileDataStoreJSON:
@@ -185,6 +195,19 @@ namespace persisted_controls_sample
             Save();
             Debug.WriteLine("Tick");
         }
+
+        public bool PreFilterMessage(ref Message m)
+        {
+            switch (m.Msg)
+            {
+                case WM_PASTE:
+                    WDT.Start();
+                    break;
+            }
+            return false; // Do not suppress downstream message
+        }
+
+        const int WM_PASTE = 0x0302;
     }
 
     class PersistTabControl

@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
+using System.Reflection;
 using System.Windows.Forms;
+using static persisted_controls_sample.Form1;
 
 namespace persisted_controls_sample
 {
@@ -16,7 +13,18 @@ namespace persisted_controls_sample
         public Form1()
         {
             InitializeComponent();
+            // Get a local AppData folder specific to this application.
+            var assemblyName =
+                    Assembly
+                    .GetExecutingAssembly()
+                    .FullName.Split(',')[0];
+            var _fileDataStoreFolder =
+                Environment.GetFolderPath(
+                    Environment.SpecialFolder.LocalApplicationData) + @"\" +
+                    assemblyName + @"\";
         }
+        // App-specific folder path to store data.
+        public static string FileDataStoreFolder { get; private set; } 
         protected override void OnHandleCreated(EventArgs e)
         {
             base.OnHandleCreated(e);
@@ -45,7 +53,7 @@ namespace persisted_controls_sample
         : TextBox           // Inherit the normal textbox
         , IPersistCommon    // But MUST implement 'SaveType' and 'Save()'
     {
-        [Browsable(true), EditorBrowsable(EditorBrowsableState.Always)]
+        [Browsable(true)]
         public SaveType SaveType { get; set; } = SaveType.AppProperties;
 
         public void Save()
@@ -56,9 +64,11 @@ namespace persisted_controls_sample
                     Properties.Settings.Default[Name] = Text;
                     Properties.Settings.Default.Save();
                     break;
-                case SaveType.WindowsRegisty:
                 case SaveType.FileDataStore:
+                case SaveType.FileDataStoreJSON:
+                case SaveType.WindowsRegisty:
                 case SaveType.SQLite:
+                default:
                     throw new NotImplementedException("To do!");
             }
             // Select all text in a thread-friendly manner.
@@ -73,9 +83,11 @@ namespace persisted_controls_sample
                     case SaveType.AppProperties:
                         Text = (string)Properties.Settings.Default[Name];
                         break;
-                    case SaveType.WindowsRegisty:
                     case SaveType.FileDataStore:
+                    case SaveType.FileDataStoreJSON:
+                    case SaveType.WindowsRegisty:
                     case SaveType.SQLite:
+                    default:
                         throw new NotImplementedException("To do!");
                 }
             }
@@ -108,7 +120,7 @@ namespace persisted_controls_sample
             WDT.Interval = 5000;
             WDT.Tick += WDT_Tick;
         }
-
+        string FileName=> FileDataStoreFolder + Name + ".rtf";
         public SaveType SaveType { get; set; } = SaveType.AppProperties;
 
         public void Save()
@@ -119,9 +131,14 @@ namespace persisted_controls_sample
                     Properties.Settings.Default[Name] = Rtf;
                     Properties.Settings.Default.Save();
                     break;
-                case SaveType.WindowsRegisty:
+                case SaveType.File:
+                    File.WriteAllText(FileName, Rtf);
+                    break;
                 case SaveType.FileDataStore:
+                case SaveType.FileDataStoreJSON:
+                case SaveType.WindowsRegisty:
                 case SaveType.SQLite:
+                default:
                     throw new NotImplementedException("To do!");
             }
         }
@@ -132,11 +149,18 @@ namespace persisted_controls_sample
                 switch (SaveType)
                 {
                     case SaveType.AppProperties:
+                        // This would be a concern if the RTF for example
+                        // holds an image file making it gigantic.
                         Rtf = (string)Properties.Settings.Default[Name];
                         break;
-                    case SaveType.WindowsRegisty:
+                    case SaveType.File:
+                        Rtf = File.ReadAllText(FileName);
+                        break;
                     case SaveType.FileDataStore:
+                    case SaveType.FileDataStoreJSON:
+                    case SaveType.WindowsRegisty:
                     case SaveType.SQLite:
+                    default:
                         throw new NotImplementedException("To do!");
                 }
             }
@@ -177,9 +201,11 @@ namespace persisted_controls_sample
                     Properties.Settings.Default[Name] = SelectedIndex;
                     Properties.Settings.Default.Save();
                     break;
-                case SaveType.WindowsRegisty:
                 case SaveType.FileDataStore:
+                case SaveType.FileDataStoreJSON:
+                case SaveType.WindowsRegisty:
                 case SaveType.SQLite:
+                default:
                     throw new NotImplementedException("To do!");
             }
         }
@@ -199,9 +225,11 @@ namespace persisted_controls_sample
                             }
                         });
                         break;
-                    case SaveType.WindowsRegisty:
                     case SaveType.FileDataStore:
+                    case SaveType.FileDataStoreJSON:
+                    case SaveType.WindowsRegisty:
                     case SaveType.SQLite:
+                    default:
                         throw new NotImplementedException("To do!");
                 }
             }
@@ -215,9 +243,11 @@ namespace persisted_controls_sample
 
     enum SaveType
     {
-        AppProperties,  // Like the textbox code shown in you question
-        WindowsRegisty, // A traditional method, but Windows Only
-        FileDataStore,  // Mobile platforms available
-        SQLite          // Mobile platforms also available
+        AppProperties,      // Like the textbox code shown in you question
+        WindowsRegisty,     // A traditional method, but Windows Only
+        File,               // For example, an RTF file in Local AppData (cross-platform)
+        FileDataStore,      // Mobile cross-platform
+        FileDataStoreJSON,  // Serialize the object's content AND SETTINGS (like 'enabled', etc.)
+        SQLite              // Mobile platforms also available
     }
 }

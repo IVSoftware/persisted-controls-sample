@@ -45,6 +45,7 @@ namespace persisted_controls_sample
         : TextBox           // Inherit the normal textbox
         , IPersistCommon    // But MUST implement 'SaveType' and 'Save()'
     {
+        [Browsable(true), EditorBrowsable(EditorBrowsableState.Always)]
         public SaveType SaveType { get; set; } = SaveType.AppProperties;
 
         public void Save()

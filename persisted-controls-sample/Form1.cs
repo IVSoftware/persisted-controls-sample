@@ -45,7 +45,7 @@ namespace persisted_controls_sample
         }
     }
 
-    interface IPersistCommon // All our controls must implement this
+    interface IPersistCommon // Things we need our custom control to do.
     {
         SaveType SaveType { get; set; } // Possible ways to save
         void Save();                    // Save in the manner selected by SaveType
@@ -115,7 +115,7 @@ namespace persisted_controls_sample
     class PersistRichTextBox
         : RichTextBox           // Inherit the standard version
         , IPersistCommon        // But MUST implement 'SaveType' and 'Save()'
-        , ISupportInitialize    //
+        , ISupportInitialize    // From System.ComponentModel
     {
         public PersistRichTextBox()
         {
@@ -123,7 +123,9 @@ namespace persisted_controls_sample
             WDT.Interval = 1000;
             WDT.Tick += WDT_Tick;
         }
+        Timer WDT;
         string FileName=> FileDataStoreFolder + Name + ".rtf";
+        [Browsable(true)]
         public SaveType SaveType { get; set; } = SaveType.AppProperties;
 
         public void Save()
@@ -185,7 +187,6 @@ namespace persisted_controls_sample
                 WDT.Start(); 
             }
         }
-        Timer WDT;
 
         // Timeout has expired since the last change to the document.
         private void WDT_Tick(object sender, EventArgs e)
@@ -210,6 +211,7 @@ namespace persisted_controls_sample
         : TabControl
         , IPersistCommon
     {
+        [Browsable(true)]
         public SaveType SaveType { get; set; }
 
         public void Save()
@@ -262,7 +264,7 @@ namespace persisted_controls_sample
 
     enum SaveType
     {
-        AppProperties,      // Like the textbox code shown in you question
+        AppProperties,      // Like the textbox code shown in the post
         WindowsRegisty,     // A traditional method, but Windows Only
         File,               // For example, an RTF file in Local AppData (cross-platform)
         FileDataStore,      // Mobile cross-platform
